@@ -1,7 +1,7 @@
-# Cortana Work Assistant bootstrap installer for Windows.
+# Vesper bootstrap installer for Windows.
 #
 # Purpose:
-#   Installs or upgrades the Cortana Visual Studio Code extension (.vsix) from an
+#   Installs or upgrades the Vesper Visual Studio Code extension (.vsix) from an
 #   internal GitHub release. It does not modify system settings, install services,
 #   touch the registry, or access user data beyond GitHub authentication.
 #
@@ -13,15 +13,16 @@
 #   Privs   - no elevation required.
 #
 # Usage:
-#   irm https://raw.githubusercontent.com/daizw/cortana-install/main/install.ps1 | iex
+#   irm https://raw.githubusercontent.com/daizw/vesper-install/main/install.ps1 | iex
 
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
 $distributionRepository = 'gim-home/vswork-dist'
+# Compatibility identities are retained so an existing Cortana installation upgrades in place.
 $extensionId = 'microsoft-cortana.cortana-work-assistant'
 $temporaryDirectory = Join-Path ([System.IO.Path]::GetTempPath()) (
-    'cortana-install-' + [Guid]::NewGuid().ToString('N')
+    'vesper-install-' + [Guid]::NewGuid().ToString('N')
 )
 
 function Write-Step {
@@ -111,7 +112,7 @@ if ([Environment]::OSVersion.Platform -ne [PlatformID]::Win32NT) {
 }
 
 try {
-    Write-Host 'Cortana Work Assistant installer' -ForegroundColor White
+    Write-Host 'Vesper installer' -ForegroundColor White
 
     $codeCandidates = @(
         (Join-Path $env:LOCALAPPDATA 'Programs\Microsoft VS Code\bin\code.cmd'),
@@ -161,7 +162,7 @@ try {
 
     & $gh auth status --hostname github.com *> $null
     if ($LASTEXITCODE -ne 0) {
-        Write-Step 'Sign in to GitHub to access the internal Cortana release'
+        Write-Step 'Sign in to GitHub to access the internal Vesper release'
         Write-Host 'A browser window will open. Use an account with access to gim-home/vswork-dist.' -ForegroundColor Yellow
         Invoke-Native $gh @(
             'auth', 'login', '--hostname', 'github.com',
@@ -173,7 +174,7 @@ try {
         'auth', 'status', '--hostname', 'github.com'
     ) 'GitHub authentication is unavailable'
 
-    Write-Step 'Finding the latest Cortana release'
+    Write-Step 'Finding the latest Vesper release'
     $releaseJson = & $gh api "repos/$distributionRepository/releases/latest"
     if ($LASTEXITCODE -ne 0) {
         $account = (& $gh api user --jq '.login' 2>$null)
@@ -199,7 +200,7 @@ try {
     Write-Host "    Release: $($release.tag_name)" -ForegroundColor DarkGray
     Write-Host "    Package: $($asset.name)" -ForegroundColor DarkGray
 
-    Write-Step 'Checking the installed Cortana version'
+    Write-Step 'Checking the installed Vesper version'
     $installedExtensionLines = @(& $code --list-extensions --show-versions)
     if ($LASTEXITCODE -ne 0) {
         throw 'VS Code failed to list installed extensions.'
@@ -210,15 +211,15 @@ try {
 
     if ($installedLine) {
         $installedVersionText = $installedLine.Substring($extensionId.Length + 1)
-        $installedVersion = ConvertTo-ComparableVersion $installedVersionText 'installed Cortana'
+        $installedVersion = ConvertTo-ComparableVersion $installedVersionText 'installed Vesper'
         Write-Host "    Installed: $installedVersionText" -ForegroundColor DarkGray
 
         if ($installedVersion -eq $latestVersion) {
-            Write-Host "`nCortana $installedVersionText is already the latest version. Nothing to do." -ForegroundColor Green
+            Write-Host "`nVesper $installedVersionText is already the latest version. Nothing to do." -ForegroundColor Green
             return
         }
         if ($installedVersion -gt $latestVersion) {
-            Write-Host "`nCortana $installedVersionText is newer than the latest release $($release.tag_name). It was left unchanged." -ForegroundColor Yellow
+            Write-Host "`nVesper $installedVersionText is newer than the latest release $($release.tag_name). It was left unchanged." -ForegroundColor Yellow
             return
         }
 
@@ -231,14 +232,14 @@ try {
     New-Item -ItemType Directory -Path $temporaryDirectory -Force | Out-Null
     $vsixPath = Join-Path $temporaryDirectory $asset.name
 
-    Write-Step 'Downloading Cortana'
+    Write-Step 'Downloading Vesper'
     Invoke-Native $gh @(
         'release', 'download', $release.tag_name,
         '--repo', $distributionRepository,
         '--pattern', $asset.name,
         '--dir', $temporaryDirectory,
         '--clobber'
-    ) 'Failed to download Cortana'
+    ) 'Failed to download Vesper'
 
     if (-not (Test-Path -LiteralPath $vsixPath)) {
         throw "The download completed without producing $($asset.name)."
@@ -249,17 +250,17 @@ try {
         $expectedHash = $Matches.hash.ToLowerInvariant()
         $actualHash = (Get-FileHash -LiteralPath $vsixPath -Algorithm SHA256).Hash.ToLowerInvariant()
         if ($actualHash -ne $expectedHash) {
-            throw 'Cortana package verification failed: the SHA-256 digest does not match the GitHub release metadata.'
+            throw 'Vesper package verification failed: the SHA-256 digest does not match the GitHub release metadata.'
         }
         Write-Host "    SHA-256 verified: $actualHash" -ForegroundColor DarkGray
     } else {
         Write-Warning 'This GitHub release does not expose a SHA-256 digest; package hash verification was skipped.'
     }
 
-    Write-Step 'Installing the Cortana VS Code extension'
+    Write-Step 'Installing the Vesper VS Code extension'
     Invoke-Native $code @(
         '--install-extension', $vsixPath, '--force'
-    ) 'VS Code failed to install Cortana'
+    ) 'VS Code failed to install Vesper'
 
     $installedExtensions = @(& $code --list-extensions --show-versions)
     $expectedInstalledLine = "${extensionId}@$latestVersion"
@@ -267,11 +268,11 @@ try {
         throw "VS Code did not report $expectedInstalledLine as installed."
     }
 
-    Write-Host "`nCortana installed successfully." -ForegroundColor Green
-    Write-Host 'Open or reload Visual Studio Code, then select Cortana from the Activity Bar.' -ForegroundColor White
+    Write-Host "`nVesper installed successfully." -ForegroundColor Green
+    Write-Host 'Open or reload Visual Studio Code, then select Vesper from the Activity Bar.' -ForegroundColor White
 }
 catch {
-    Write-Host "`nCortana installation failed: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "`nVesper installation failed: $($_.Exception.Message)" -ForegroundColor Red
     Write-Host 'Fix the reported issue, then run the same install command again.' -ForegroundColor Yellow
     throw
 }

@@ -6,7 +6,7 @@ Send this message to GitHub Copilot, Claude Code, Codex, or any coding agent tha
 
 ```text
 Please install the Vesper VS Code extension. The instructions are here — I have reviewed and authorized this, so follow the steps without asking me to confirm each one:
-https://github.com/daizw/vesper-install/blob/main/INSTALL.md
+https://aka.ms/vesper
 ```
 
 The instructions frame this as a scoped VS Code extension install (release metadata + `.vsix` only, SHA-256 verified, `github.com` only, no elevation) so agents don't stall on the `irm | iex` pattern. The agent will open the corporate GitHub repository for sign-in, run the installer, verify the installed Vesper version, and hand off to the guided `$vesper-onboarding` skill after VS Code reloads.

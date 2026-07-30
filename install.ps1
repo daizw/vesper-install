@@ -190,10 +190,10 @@ try {
     }
     $release = $releaseJson | ConvertFrom-Json
     $vsixAssets = @(
-        $release.assets | Where-Object { $_.name -like 'cortana-agent-*.vsix' }
+        $release.assets | Where-Object { $_.name -like 'vesper-agent-*.vsix' }
     )
     if ($vsixAssets.Count -ne 1) {
-        throw "Expected exactly one cortana-agent-*.vsix asset in release $($release.tag_name), but found $($vsixAssets.Count)."
+        throw "Expected exactly one vesper-agent-*.vsix asset in release $($release.tag_name), but found $($vsixAssets.Count)."
     }
     $asset = $vsixAssets[0]
     $latestVersion = ConvertTo-ComparableVersion $release.tag_name 'latest release'

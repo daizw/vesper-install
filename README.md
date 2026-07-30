@@ -30,4 +30,4 @@ The bootstrap installer:
 
 The signed-in GitHub account must have access to `gim-home/vswork-dist`. No credentials or tokens are stored in this repository.
 
-The extension ID and `cortana-agent-*.vsix` asset name are intentionally retained so existing installations upgrade in place.
+Releases use the `vesper-agent-*.vsix` asset name. The legacy extension ID is intentionally retained so existing installations upgrade in place; the VSIX filename itself is not an extension identity.

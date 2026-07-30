@@ -13,6 +13,8 @@ These instructions install the **Vesper Visual Studio Code extension** from an i
 - **Integrity:** the downloaded `.vsix` is verified against the SHA-256 digest published in the GitHub release.
 - **Privileges:** no elevation required. WinGet installs VS Code / GitHub CLI only when they are missing.
 
+Releases publish `vesper-agent-*.vsix`. The VSIX filename is not an extension identity; the legacy manifest ID remains stable so an existing installation upgrades in place.
+
 ## Steps
 
 These instructions are for any coding agent that can access the web and run Windows PowerShell. Follow them on Windows.

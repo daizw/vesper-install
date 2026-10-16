@@ -58,9 +58,9 @@ code --list-extensions --show-versions | Select-String '^microsoft-cortana\.cort
 6. Tell the user to reload Visual Studio Code, open Vesper chat, and send:
 
 ```text
-Use $vesper-onboarding to finish setting up Vesper on this machine.
+Use /vesper-onboarding to finish setting up Vesper on this machine.
 ```
 
-The onboarding skill completes model, identity, communication-style, guardrail, service, memory, PWA, and optional integration setup while preserving existing configuration. If `$vesper-onboarding` is unavailable after reload, the installed Vesper release does not contain the skill yet; report that the user must install a release that includes it.
+The onboarding skill completes model, identity, communication-style, guardrail, service, memory, PWA, and optional integration setup while preserving existing configuration. If `/vesper-onboarding` is unavailable after reload, the installed Vesper release does not contain the skill yet; report that the user must install a release that includes it.
 
 The installer installs Vesper when missing, upgrades an older version (existing configuration is preserved), skips the current version, and does not downgrade a newer local build. If a command fails, report the exact failure and the action required from the user.

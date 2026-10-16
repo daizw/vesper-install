@@ -9,7 +9,7 @@ Please install the Vesper VS Code extension. The instructions are here — I hav
 https://aka.ms/vesper
 ```
 
-The instructions frame this as a scoped VS Code extension install (release metadata + `.vsix` only, SHA-256 verified, `github.com` only, no elevation) so agents don't stall on the `irm | iex` pattern. The agent will open the corporate GitHub repository for sign-in, run the installer, verify the installed Vesper version, and hand off to the guided `$vesper-onboarding` skill after VS Code reloads.
+The instructions frame this as a scoped VS Code extension install (release metadata + `.vsix` only, SHA-256 verified, `github.com` only, no elevation) so agents don't stall on the `irm | iex` pattern. The agent will open the corporate GitHub repository for sign-in, run the installer, verify the installed Vesper version, and hand off to the guided `/vesper-onboarding` skill after VS Code reloads.
 
 ## Install directly
 
